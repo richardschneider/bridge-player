@@ -1,0 +1,45 @@
+{
+  "name": "bridge-player",
+  "description": "A player at a bridge table",
+  "homepage": "https://github.com/richardschneider/bridge-player",
+  "bugs": "https://github.com/richardschneider/bridge-player/issues",
+  "license": "MIT",
+  "main": "index.js",
+  "author": {
+    "name": "Richard Schneider",
+    "email": "makaretu@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/richardschneider/bridge-player"
+  },
+  "keywords": [
+    "bridge",
+    "online",
+    "computer",
+    "duplicate"
+  ],
+  "dependencies": {
+   },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-coveralls": "^0.1.4",
+    "gulp-jshint": "^2.0.1",
+    "gulp-spawn-mocha": "^2.2.2",
+    "jshint": "^2.9.2",
+    "jshint-stylish": "^2.2.0",
+    "mocha": "*",
+    "semantic-release": "^4.3.5",
+    "should": "*",
+    "validate-commit-msg": "^2.6.1"
+  },
+  "config": {
+    "ghooks": {
+      "commit-msg": "validate-commit-msg"
+    }
+  },
+  "scripts": {
+    "test": "gulp test",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+  }
+}
