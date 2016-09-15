@@ -25,6 +25,7 @@ function TestTable(cb) {
             var client = net.connect(port, host,  () => {
                 cb(client);
             });
+            client.on('end', () => server.close());
         });
     });
 }

@@ -36,4 +36,19 @@ describe('Bridge Player', () => {
         });
      });
 
+    it('should emit "message" event', done => {
+        let messageSeen = false;
+        testTable(table => {
+            new Player()
+                .on('end', () => {
+                    messageSeen.should.equal(true);
+                    done();
+                })
+                .on('error', done)
+                .on('message', () => messageSeen = true)
+                .connect(table);
+            table.end();
+        });
+     });
+
 });
