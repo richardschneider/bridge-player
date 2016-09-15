@@ -3,7 +3,7 @@
 require('should');
 
 let Player = require('..'),
-    Table = require('./table'),
+    testTable = require('./table'),
     bridge = require('bridge.js'),
     seat = bridge.seat;
 
@@ -26,9 +26,14 @@ describe('Bridge Player', () => {
         player.should.have.property('teamName', 'Blue Team');
     });
 
-    it('should exchange messages with the table', () => {
-        let player = new Player();
-        player.connect(new Table());
+    it('should exchange messages with the table', done => {
+        testTable(table => {
+            new Player()
+                .on('end', () => done())
+                .on('error', done)
+                .connect(table);
+            table.end();
+        });
      });
 
 });

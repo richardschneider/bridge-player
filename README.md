@@ -14,15 +14,21 @@ the help of [semantic-release](https://github.com/semantic-release/semantic-rele
 
 Install the latest version with [npm](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
 
-    > npm install bridge-player --save
+    > npm install bridge.js bridge-player --save
 
 ## Usage
 
-Include the package
+Include the packages
 
-    const tms = require('bridge-player');
+    let Player = require('bridge-player'),
+        seat = require('bridge.js').seat;
 
 **TODO** sample usage
+
+    let me = new Player({
+        seat: seat.south,
+        teamName: 'Red Team'
+    });
 
 # License
 The [MIT license](LICENSE).
