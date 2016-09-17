@@ -43,10 +43,13 @@ function makeBot(seat) {
 
     if (program.debug) {
         me
-            .on('sent', m => console.log('sent:', m))
-            .on('message', m => console.log('rcvd:', m));
+            .on('sent', m => console.log(me.seat.symbol, 'sent:', m))
+            .on('message', m => console.log(me.seat.symbol, 'rcvd:', m));
     }
-
+    me.on('make-bid', player => {
+        var bid = player.auction.bids.length === 0 ? '1C' : 'pass';
+        player.bid(bid);
+    });
     me.connect(table);
     return me;
 }
