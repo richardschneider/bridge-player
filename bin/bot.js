@@ -50,6 +50,10 @@ function makeBot(seat) {
         var bid = player.game.auction.bids.length === 0 ? '1C' : 'pass';
         player.bid(bid);
     });
+    me.on('make-lead', player => {
+        var card = player.cards()[0];
+        player.play(card);
+    });
     me.connect(table);
     return me;
 }
