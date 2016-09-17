@@ -31,9 +31,9 @@ describe('Bridge Player', () => {
         player.should.have.property('board');
     });
 
-    it('should have an auction', () => {
+    it('should have a game', () => {
         let player = new Player();
-        player.should.have.property('auction');
+        player.should.have.property('game');
     });
 
     it('should exchange messages with the table', done => {

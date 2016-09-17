@@ -47,7 +47,7 @@ function makeBot(seat) {
             .on('message', m => console.log(me.seat.symbol, 'rcvd:', m));
     }
     me.on('make-bid', player => {
-        var bid = player.auction.bids.length === 0 ? '1C' : 'pass';
+        var bid = player.game.auction.bids.length === 0 ? '1C' : 'pass';
         player.bid(bid);
     });
     me.connect(table);
