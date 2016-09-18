@@ -36,7 +36,7 @@ function makeBot(seat) {
     table = net.connect(port, host);
 
     me.on('error', e => {
-        console.error(e);
+        console.error(me.seat.symbol, e);
         if (!program.ignore)
             process.exit(1);
     });
@@ -50,9 +50,14 @@ function makeBot(seat) {
         var bid = player.game.auction.bids.length === 0 ? '1C' : 'pass';
         player.bid(bid);
     });
-    me.on('make-lead', player => {
-        var card = player.cards()[0];
+    me.on('make-play', player => {
+        var card = player.cards[0]; // TODO: must follow suit
         player.play(card);
+    });
+    me.on('make-dummy-play', player => {
+        console.log('dummy has', player.dummyCards);
+        var card = player.dummyCards[0];  // TODO: must follow suit
+        player.play(card, player.game.contract.dummy());
     });
     me.connect(table);
     return me;
