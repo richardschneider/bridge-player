@@ -51,13 +51,26 @@ function makeBot(seat) {
         player.bid(bid);
     });
     me.on('make-play', player => {
-        var card = player.cards[0]; // TODO: must follow suit
+        var card;
+        var trick = player.game.tricks[player.trickNumber - 1];
+        if (trick && trick.leaderSuit()) {
+            card = player.cards.find(c => c.suit === trick.leaderSuit());
+        }
+        if (!card) {
+            card = player.cards[0];
+        }
         player.play(card);
     });
     me.on('make-dummy-play', player => {
-        console.log('dummy has', player.dummyCards);
-        var card = player.dummyCards[0];  // TODO: must follow suit
-        player.play(card, player.game.contract.dummy());
+        var card;
+        var trick = player.game.tricks[player.trickNumber - 1];
+        if (trick && trick.leaderSuit()) {
+            card = player.dummyCards.find(c => c.suit === trick.leaderSuit());
+        }
+        if (!card) {
+            card = player.dummyCards[0];
+        }
+        player.playFromDummy(card);
     });
     me.connect(table);
     return me;
