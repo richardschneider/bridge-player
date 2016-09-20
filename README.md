@@ -44,6 +44,18 @@ Connect the player to the table.  The table is a Duplex stream, typically a TCP 
     table = net.connect(port, host);
     me.connect(table);
     
+### Browser
+
+Include the package from your project
+
+    <script src="./node_modules/bridge-player/dist/bridge-player.min.js" type="text/javascript"></script>
+
+or from the [unpkg CDN](https://unpkg.com)
+
+    <script src="https://unpkg.com/bridge-player/dist/bridge-player.min.js"></script>
+
+This will provide `BridgePlayer` as a global object, or `define` it if you are using [AMD](https://en.wikipedia.org/wiki/Asynchronous_module_definition).
+
 # License
 The [MIT license](LICENSE).
 
