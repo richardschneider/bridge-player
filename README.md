@@ -12,6 +12,8 @@ the help of [semantic-release](https://github.com/semantic-release/semantic-rele
 
 ## Getting started
 
+**bridge-player** is available for [Node.js](https://nodejs.org) and most modern browsers.  If you want to know if your currrent browser is compatible, run the [online test suite](https://unpkg.com/bridge-player/test/index.html).
+
 Install the latest version with [npm](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
 
     > npm install bridge.js bridge-player --save
