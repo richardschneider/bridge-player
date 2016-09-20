@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "bridge.js": "^1.6.2",
-    "table-master-stream": "^1.3.6"
+    "table-master-stream": "^1.4.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
