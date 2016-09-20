@@ -1,31 +1,19 @@
 'use strict';
 
-let tms = require('table-master-stream'),
-    process = require('process'),
-    net = require('net');
+let stream = require('stream'),
+    util = require('util');
 
 /*
- * A simple table that always sends 'end of sesssion' on a connect message.
+ * A simple table that always sends 'end of sesssion' and closes.
  */
-function TestTable(cb) {
-    var port = 3000,
-        host = 'localhost';
-    var server = net.createServer(socket => {
-        function send(msg) {
-            socket.write(msg + '\r\n');
-        }
-        socket
-            .pipe(tms())
-            .on('connect', () => send(`end of session`));
-    });
-    server.listen(port, host, () => {
-        process.nextTick(() => {
-            var client = net.connect(port, host,  () => {
-                cb(client);
-            });
-            client.on('end', () => server.close());
-        });
-    });
+function TestTable() {
+    stream.Transform.call(this);
 }
+util.inherits(TestTable, stream.Transform);
+
+TestTable.prototype._transform = function() {
+    this.push('end of session\r\n');
+    this.push(null);
+};
 
 module.exports = TestTable;

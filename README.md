@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/richardschneider/bridge-player/badge.svg?branch=master)](https://coveralls.io/github/richardschneider/bridge-player?branch=master)
  [![npm version](https://badge.fury.io/js/bridge-player.svg)](https://badge.fury.io/js/bridge-player) 
  
-A **bridge-player** allows a human or robot to play electronic bridge using the [Blue Chip Bridge Table Manager Protocol](http://www.bluechipbridge.co.uk/protocol.htm). It processses/generates the protocol messages and only asks the palyer to make a bid or
+A **bridge-player** allows a human or robot to play electronic bridge using the [Blue Chip Bridge Table Manager Protocol](http://www.bluechipbridge.co.uk/protocol.htm). It processses/generates the protocol messages and only asks the player to make a bid or
 play a card.
 
 The [change log](https://github.com/richardschneider/bridge-player/releases) is automatically produced with
@@ -21,7 +21,8 @@ Install the latest version with [npm](http://blog.npmjs.org/post/85484771375/how
 Include the packages
 
     let Player = require('bridge-player'),
-        seat = require('bridge.js').seat;
+        seat = require('bridge.js').seat,
+        net = require('net');
 
 Create a player
 
@@ -36,11 +37,12 @@ Create a player
         .on('make-play', player => player.play(...))
         .on('make-dummy-play', player => player.playFromDummy(...));
 
-Connect the player to a table manager
+Connect the player to the table.  The table is a Duplex stream, typically a TCP socket.
 
+    table = net.connect(port, host);
     me.connect(table);
     
 # License
 The [MIT license](LICENSE).
 
-Copyright © 2016 Richard Schneider [(makaretu@gmail.com)](mailto:makaretu@gmail.com?subject=table+master+stream)
+Copyright © 2016 Richard Schneider [(makaretu@gmail.com)](mailto:makaretu@gmail.com?subject=bridge+player)

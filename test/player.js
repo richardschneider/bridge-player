@@ -3,7 +3,7 @@
 require('should');
 
 let Player = require('..'),
-    testTable = require('./table'),
+    TestTable = require('./table'),
     bridge = require('bridge.js'),
     seat = bridge.seat;
 
@@ -37,43 +37,37 @@ describe('Bridge Player', () => {
     });
 
     it('should exchange messages with the table', done => {
-        testTable(table => {
-            new Player()
-                .on('end', () => done())
-                .on('error', done)
-                .connect(table);
-            table.end();
-        });
+        let table = new TestTable();
+        new Player()
+            .on('end', () => done())
+            .on('error', done)
+            .connect(table);
      });
 
     it('should emit "message" event', done => {
-        let messageSeen = false;
-        testTable(table => {
-            new Player()
-                .on('end', () => {
-                    messageSeen.should.equal(true);
-                    done();
-                })
-                .on('error', done)
-                .on('message', () => messageSeen = true)
-                .connect(table);
-            table.end();
-        });
+        let messageSeen = false,
+            table = new TestTable();
+        new Player()
+            .on('end', () => {
+                messageSeen.should.equal(true);
+                done();
+            })
+            .on('error', done)
+            .on('message', () => messageSeen = true)
+            .connect(table);
      });
 
     it('should emit "sent" event', done => {
-        let eventSeen = false;
-        testTable(table => {
-            new Player()
-                .on('end', () => {
-                    eventSeen.should.equal(true);
-                    done();
-                })
-                .on('error', done)
-                .on('sent', () => eventSeen = true)
-                .connect(table);
-            table.end();
-        });
+        let eventSeen = false,
+            table = new TestTable();
+        new Player()
+            .on('end', () => {
+                eventSeen.should.equal(true);
+                done();
+            })
+            .on('error', done)
+            .on('sent', () => eventSeen = true)
+            .connect(table);
      });
 
 });
