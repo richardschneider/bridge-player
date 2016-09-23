@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Message viewer</title>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <style>
+        #messages ol {
+            margin-left: 17px;
+        }
+        li.received:before {
+            content: "\e094";
+            font-family: 'Glyphicons Halflings';
+            font-size: 12px;
+            float: left;
+            margin-top: 4px;
+            margin-left: -17px;
+        }
+        li.sent:before {
+            content: "\e093";
+            color: #00FF00;
+            font-family: 'Glyphicons Halflings';
+            font-size: 12px;
+            float: left;
+            margin-top: 4px;
+            margin-left: -17px;
+        }
+        li.error:before {
+            content: "\e014";
+            font-family: 'Glyphicons Halflings';
+            font-size: 12px;
+            float: left;
+            margin-top: 4px;
+            margin-left: -17px;
+            color: #F02C05;
+        }
+
+  </style>
+
+</head>
+<body>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-sm-8">
+        <h3>Message viewer</h1>
+        <p >
+        See the messages exchanged by a Player and a table.  The Player is very simple in its bidding and card play.
+        </p>
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="host">Host</label>
+                <input type="text" class="form-control" id="host" value="localhost" autocomplete="on">
+            </div>
+            <div class="form-group">
+                <label for="port">Port</label>
+                <input type="text" class="form-control" id="port" value="2000" autocomplete="on">
+            </div>
+            <button id="connect" type=button class="btn btn-default">Connect</button>
+            <div id="error" class="alert alert-warning help-block hidden" role="alert">
+                <strong>Failed!</strong> <span id="error-message"></span>
+            </div>
+        </form>
+
+        <div id="messages">
+            <h4>Messages</h4>
+            <ol class="list-unstyled"></ol>
+        </div>
+    </div>
+
+    <div class="col-sm-3 col-sm-offset-1">
+        <h4>Resources</h4>
+        <ol class="list-unstyled">
+            <li><a href="http://www.bluechipbridge.co.uk/protocol.htm">Blue Chip Bridge</a></li>
+            <li><a href="https://bridge-robots.com/">Bridge Robots</a></li>
+            <li><a href="./index.html">Message documentation<a></li>
+            <li><a href="http://www.allevybridge.com/allevy/computerbridge/WCBC_coc.html">WBF computer bride<a></li>
+            <li><a href="https://github.com/richardschneider/bridge-player">This package</a></li>
+        </ol>
+    </div>
+
+  </div> <!-- row --->
+</div> <!-- container -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="../dist/bridge-player.js"></script>
+<script src="./websocket-stream.js"></script>
+
+<script>
+    var player;
+    $(document).ready(function() {
+        player = new BridgePlayer();
+        player
+            .on('message', function(m) { showMessage('received', m.text); })
+            .on('sent', function(m) { showMessage('sent', m); })
+            .on('error', function(e) { showMessage('error', e.message); })
+            .on('end', function() { showMessage('error','Play is over'); })
+        robotPlay(player);
+        $('#connect').click(onConnect);
+    });
+
+    function onConnect() {
+        var host = $('#host').val();
+        var port = $('#port').val();
+        var url = 'ws://localhost:4321/tunnel?host=' + host + '&port=' + port;
+        var table = new WebSocketStream(url);
+        table.on('error', function(event) {
+            if (event.target.readyState === 3) {
+                showMessage('error', "The connection couldn't be opened");
+            } else {
+                showMessage('error', "WebSocket error");
+            }
+        });
+        table.on('connect', function() {
+            player.connect(table);
+        });
+    }
+
+    function showMessage(type, message) {
+        $("#messages ol").append('<li class="' + type + '">' + message + '</li>')
+    }
+
+    function robotPlay(me) {
+        me.on('make-bid', player => {
+            var bid = player.game.auction.bids.length === 0 ? '1C' : 'pass';
+            player.bid(bid);
+        });
+        me.on('make-play', player => {
+            var card;
+            var trick = player.game.tricks[player.trickNumber - 1];
+            if (trick && trick.leaderSuit()) {
+                card = player.cards.find(c => c.suit === trick.leaderSuit());
+            }
+            if (!card) {
+                card = player.cards[0];
+            }
+            player.play(card);
+        });
+        me.on('make-dummy-play', player => {
+            var card;
+            var trick = player.game.tricks[player.trickNumber - 1];
+            if (trick && trick.leaderSuit()) {
+                card = player.dummyCards.find(c => c.suit === trick.leaderSuit());
+            }
+            if (!card) {
+                card = player.dummyCards[0];
+            }
+            player.playFromDummy(card);
+        });
+
+    }
+</script>
+
+</body>
+</html>
