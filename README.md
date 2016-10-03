@@ -56,6 +56,62 @@ or from the [unpkg CDN](https://unpkg.com)
 
 This will provide `BridgePlayer` as a global object, or `define` it if you are using [AMD](https://en.wikipedia.org/wiki/Asynchronous_module_definition).
 
+## Class Player
+
+Allows a human or robot to play electronic bridge using the [Blue Chip Bridge Table Manager Protocol](http://www.bluechipbridge.co.uk/protocol.htm). The [table master stream](https://www.npmjs.com/package/table-master-stream) 
+is used to processs/generate the protocol messages and only asks the player to make a bid or
+play a card; `Player.bid()`, `Player.play()` and `Player.playFromDummy()`.
+
+
+#### new Player([options])
+
+`options` is an object with the following defaults:
+
+````
+{
+    seat: seat.south,
+    teamName: 'emanon'
+}
+````
+
+#### Event 'end' 
+
+Emitted when the table session is finished.
+
+#### Event 'error'
+
+Emitted when an error occurs. 
+
+#### Event 'make-bid'
+
+* Player 
+
+Emitted when the player needs to make a bid.  `player.bid()` must eventually be called.
+
+#### Event 'make-play'
+
+* Player 
+
+Emitted when the player needs to play a card.  `player.play()` must eventually be called.
+
+#### Event 'make-dummy-play'
+
+* Player 
+
+Emitted when the player needs to play a card from dummy.  `player.playFromDummy()` must eventually be called.
+
+#### Event 'message'
+
+* Table Manager messagee without the trailing CRLF
+
+Emitted when a Table Manager message is received.
+
+#### Event 'sent'
+
+* Table Manager message without the trailing CRLF 
+
+Emitted after a message is sent to the table.
+
 # License
 The [MIT license](LICENSE).
 
