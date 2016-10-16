@@ -102,9 +102,15 @@ Emitted when the player needs to play a card from dummy.  `player.playFromDummy(
 
 #### Event 'message'
 
-* Table Manager messagee without the trailing CRLF
+* Table Manager message without the trailing CRLF
 
 Emitted when a Table Manager message is received.
+
+#### Event 'message-processed'
+
+* Table Manager message without the trailing CRLF
+
+Emitted after a Table Manager message is processed.
 
 #### Event 'sent'
 

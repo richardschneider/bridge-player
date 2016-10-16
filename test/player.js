@@ -70,4 +70,21 @@ describe('Bridge Player', () => {
             .connect(table);
      });
 
+   it('should emit "message-processed" event', done => {
+        let messageSeen = false,
+            table = new TestTable();
+        let player = new Player()
+            .on('end', () => {
+                messageSeen.should.equal(true);
+                done();
+            })
+            .on('error', done)
+            .on('message-processed', () => {
+                player.state.should.equal('done');
+                messageSeen = true;
+            })
+            .connect(table);
+     });
+
+
 });
